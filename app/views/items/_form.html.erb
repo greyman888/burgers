@@ -1,0 +1,35 @@
+<%= form_with(model: item) do |f| %>
+  <% if item.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+        <% item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+
+  <% end %>
+
+  <div class="form-floating">
+    <%= f.text_field :category, placeholder: "", class: 'form-control' %>
+    <%= f.label :category, "Burger/Drink/Side/Addition" %>
+  </div>
+  <div class="form-floating">
+    <%= f.text_field :name, placeholder: "", class: 'form-control' %>
+    <%= f.label :name, "Display Name" %>
+  </div>
+  <div class="form-floating">
+    <%= f.text_field :size, placeholder: "", class: 'form-control' %>
+    <%= f.label :size, "Small/Medium/Large" %>
+  </div>
+  <div class="form-floating">
+    <%= f.text_field :price, placeholder: "", class: 'form-control' %>
+    <%= f.label :price, "Price in cents" %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

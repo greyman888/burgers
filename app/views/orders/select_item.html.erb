@@ -1,0 +1,37 @@
+<h1>Select Item to Add to order</h1>
+
+<%= form_with(model: @selection) do |f| %>
+  <%= f.hidden_field :order_id, value: @selection.order.id %>
+  <h4>Burgers</h4>
+  <% @items.each do |item| %>
+    <% if item.category == "Burger" %>
+      <div class="form-check">
+        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+        <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
+      </div>
+    <% end %>
+  <% end %>
+  <h4>Sides</h4>
+  <% @items.each do |item| %>
+    <% if item.category == "Side" %>
+      <div class="form-check">
+        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+      </div>
+    <% end %>
+  <% end %>
+  <h4>Drinks</h4>
+  <% @items.each do |item| %>
+    <% if item.category == "Drink" %>
+      <div class="form-check">
+        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+      </div>
+    <% end %>
+  <% end %>
+
+
+  <div>
+    <%= f.submit "Save", class: "btn btn-primary" %>
+  </div>
+<% end %>

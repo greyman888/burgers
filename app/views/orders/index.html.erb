@@ -1,0 +1,11 @@
+<h1>Order Index</h1>
+<% @orders.each do |order| %>
+  <p>
+    <%= "#{order.id} " %>
+    <%= link_to "Edit", edit_order_path(order) %>
+  </p>
+<% end %>
+
+
+<%= link_to "Items Index", items_path %>
+<%= link_to "New Order", new_order_path, class: "btn btn-primary" %>
