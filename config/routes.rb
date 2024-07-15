@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
 
   resources :items
+  resources :modifications
   resources :selections
 
 

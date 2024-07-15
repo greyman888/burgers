@@ -7,10 +7,15 @@
 <% @selections.each do |selection| %>
   <p>
     <%= "#{selection.item.name} (#{selection.item.size})" %>
-    <% if selection.item.category == "Burger" %>
-      <%= link_to "Modify", "#" %>
-    <% end %>
     <%= link_to "Remove", selection_path(selection), method: :delete, data: { "turbo-method": :delete } %>
+    <% if selection.item.category == "Burger" %>
+      <%= link_to "Modify", edit_selection_path(selection) %>
+      <ul>
+        <% selection.modifications.each do |modification| %>
+          <li><%= "#{modification.item.category == "Addition" ? "Add" : "Remove"} #{modification.item.name}" %></li>
+        <% end %>
+      </ul>
+    <% end %>
   </p>
 <% end %>
 

@@ -1,4 +1,6 @@
 class SelectionsController < ApplicationController
+  before_action :set_selection, only: %i[ edit destroy ]
+
   def create
     @selection = Selection.new(selection_params)
     @selection.save
@@ -6,16 +8,21 @@ class SelectionsController < ApplicationController
   end
 
   def destroy
-    @selection = Selection.find(params[:id])
     order = @selection.order
     @selection.destroy
     redirect_to edit_order_url(order)
   end
 
+  def edit
+    @items = Item.where(category: ["Addition", "Subtraction"])
+    @modification = Modification.new
+    
+  end
+
   private
 
-  def set_order
-    @order = Order.find(params[:id])
+  def set_selection
+    @selection = Selection.find(params[:id])
   end
 
   def selection_params

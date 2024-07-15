@@ -12,16 +12,11 @@ class OrdersController < ApplicationController
 
   def select_item
     @items = Item.all
-    @selection = @order.selections.new
+    @selection = Selection.new
   end
 
-  # def remove_item
-    
-  # end
-
   def edit
-    # @selected_items = @order.items
-    @selections = @order.selections.includes(:item)
+    @selections = @order.selections.includes(:item, :modifications => :item)
   end
 
   def show
