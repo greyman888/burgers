@@ -3,16 +3,14 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "orders#index"
 
-  resources :orders do
-    member do
-      get 'select_item'
-      # get 'remove_item'
-    end
-  end
-
+  resources :orders
   resources :items
   resources :modifications
-  resources :selections
+  resources :selections do
+    member do
+      get 'change'
+    end
+  end
 
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

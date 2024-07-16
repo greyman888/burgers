@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: %i[ show edit select_item update destroy ]
+  before_action :set_order, only: %i[ show edit update destroy ]
 
   def index
     @orders = Order.all
@@ -7,16 +7,12 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.create
-    
-  end
-
-  def select_item
-    @items = Item.all
-    @selection = Selection.new
+    @selections = []
+    render "edit"
   end
 
   def edit
-    @selections = @order.selections.includes(:item, :modifications => :item)
+    @selections = @order.selections.includes(:item, :modifications => :item, :meal_selections => :item)
   end
 
   def show
@@ -28,7 +24,8 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    
+    @order.destroy
+    redirect_to orders_path
   end
 
   private
@@ -37,7 +34,6 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def order_params
     params.require(:order).permit(:chunk)
   end

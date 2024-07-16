@@ -1,7 +1,20 @@
 <h1>Select Item to Add to order</h1>
+<div>
+  <%#link_to "Show this order", @order %> |
+  <%= link_to "Back to order", edit_order_path(@order) %>
+</div>
 
 <%= form_with(model: @selection) do |f| %>
-  <%= f.hidden_field :order_id, value: @selection.order.id %>
+  <%= f.hidden_field :order_id, value: @order.id %>
+  <h4>Meals</h4>
+  <% @items.each do |item| %>
+    <% if item.category == "Meal" %>
+      <div class="form-check">
+        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+      </div>
+    <% end %>
+  <% end %>
   <h4>Burgers</h4>
   <% @items.each do |item| %>
     <% if item.category == "Burger" %>

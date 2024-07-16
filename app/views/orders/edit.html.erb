@@ -1,27 +1,61 @@
 <h1>Edit Order</h1>
 
 <p>
-  <%= link_to "Add new Item", select_item_order_path(@order) %>
+  <%= link_to "Add new Item", new_selection_path(order: @order) %>
 </p>
 
 <% @selections.each do |selection| %>
-  <p>
-    <%= "#{selection.item.name} (#{selection.item.size})" %>
-    <%= link_to "Remove", selection_path(selection), method: :delete, data: { "turbo-method": :delete } %>
-    <% if selection.item.category == "Burger" %>
-      <%= link_to "Modify", edit_selection_path(selection) %>
-      <ul>
-        <% selection.modifications.each do |modification| %>
-          <li><%= "#{modification.item.category == "Addition" ? "Add" : "Remove"} #{modification.item.name}" %></li>
-        <% end %>
-      </ul>
+  <div>
+    <% if !selection.meal_id %>
+
+      <% if selection.item.category == "Burger" %>
+        <%= "#{selection.item.name}" %>
+        <%= link_to "Modify", edit_selection_path(selection) %>
+        <%= link_to "Remove", selection_path(selection), method: :delete, data: { "turbo-method": :delete } %>
+        <ul>
+          <% selection.modifications.each do |modification| %>
+            <li>
+              <%= "#{modification.item.category == "Addition" ? "Add" : "Remove"} #{modification.item.name}" %>
+              <%= link_to "Delete", modification_path(modification), method: :delete, data: { "turbo-method": :delete } %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <%= "#{selection.item.name} (#{selection.item.size})" %>
+        <%= link_to "Remove", selection_path(selection), method: :delete, data: { "turbo-method": :delete } %>
+      <% end %>
+
+      <% if selection.item.category == "Meal" %>
+        <ul>
+          <% selection.meal_selections.each do |selection| %>
+            
+            <li>
+              <% if selection.item.category == "Burger" %>
+              <%= "#{selection.item.name}" %>
+                <%= link_to "Modify", edit_selection_path(selection) %>
+                <ul>
+                  <% selection.modifications.each do |modification| %>
+                    <li>
+                      <%= "#{modification.item.category == "Addition" ? "Add" : "Remove"} #{modification.item.name}" %>
+                      <%= link_to "Delete", modification_path(modification), method: :delete, data: { "turbo-method": :delete } %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <%= "#{selection.item.name} (#{selection.item.size})" %>
+                <%= link_to "Change", change_selection_path(selection) %>
+              <% end %>
+            </li>
+
+          <% end %>
+        </ul>
+      <% end %>
+
     <% end %>
-  </p>
+  </div>
 <% end %>
 
-<br>
-
 <div>
-  <%= link_to "Show this order", @order %> |
+  <%= link_to "Cancel order", order_path(@order), method: :delete, data: { "turbo-method": :delete } %> |
   <%= link_to "Back to orders", orders_path %>
 </div>
