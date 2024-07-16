@@ -28,6 +28,11 @@ class OrdersController < ApplicationController
     redirect_to orders_path
   end
 
+  # Voice ordering
+  def new_voice
+    @order = Order.new
+  end
+
   private
 
   def set_order

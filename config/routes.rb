@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root "orders#index"
 
   resources :orders
+  get "/new_voice_order", to: "orders#new_voice"
   resources :items
   resources :modifications
   resources :selections do

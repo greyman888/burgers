@@ -1,0 +1,13 @@
+<h1>New Voice Order</h1>
+
+<div data-controller="voice">
+  <%= form_with(model: @order) do |f| %>
+    <div class="form-floating">
+      <%= f.text_area :prompt, placeholder: "", class: "form-control", style: "height: 200px;", data: {voice_target: "prompt"} %>
+      <%= f.label :prompt, "Order"  %>
+    </div>
+  <% end %>
+
+  <button data-action="voice#startCapture" class="btn btn-primary">Start</button>
+  <button data-action="voice#stopCapture" class="btn btn-secondary">Stop</button>
+</div>
