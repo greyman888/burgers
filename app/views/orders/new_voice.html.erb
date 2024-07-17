@@ -6,8 +6,19 @@
       <%= f.text_area :prompt, placeholder: "", class: "form-control", style: "height: 200px;", data: {voice_target: "prompt"} %>
       <%= f.label :prompt, "Order"  %>
     </div>
+
+  <div>
+    <%= f.submit "Save", class: "btn btn-primary" %>
+  </div>
   <% end %>
 
-  <button data-action="voice#startCapture" class="btn btn-primary">Start</button>
-  <button data-action="voice#stopCapture" class="btn btn-secondary">Stop</button>
+  <div class="mt-3">
+    <button data-action="voice#startCapture" class="btn btn-primary">Start</button>
+    <button data-action="voice#stopCapture" class="btn btn-secondary">Stop</button>
+    <button data-action="voice#convert" class="btn btn-success">Convert</button>
+  </div>
+
+  <pre data-voice-target="output"></pre>
 </div>
+
+

@@ -33,6 +33,13 @@ class OrdersController < ApplicationController
     @order = Order.new
   end
 
+  def create
+    @order = Order.build(order_params)
+    if @order.save
+      # @order.convert_to_JSON
+    end
+  end
+
   private
 
   def set_order
