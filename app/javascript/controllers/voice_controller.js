@@ -61,7 +61,7 @@ export default class extends Controller {
 
   convert() {
     const url = "https://api.ai-struct.com/api/v1/submit";
-    const apiKey = "ais_7ea45f118220b1af8296479a9c047595"; // Replace with your actual API key
+    const apiKey = ""; // Replace with your actual API key
 
     const data = {
       chunk: {
