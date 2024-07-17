@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["prompt", "output"]
+  static targets = ["chunk", "output"]
 
   connect() {
     if ('webkitSpeechRecognition' in window) {
@@ -46,7 +46,7 @@ export default class extends Controller {
   }
 
   appendText(text) {
-    this.promptTarget.value += text + ' ';
+    this.chunkTarget.value += text + ' ';
   }
 
   onError(event) {

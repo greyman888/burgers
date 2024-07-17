@@ -3,6 +3,7 @@
   <p>
     <%= "#{order.id} (Items: #{order.selections.count})" %>
     <%= link_to "Edit", edit_order_path(order) %>
+    <%= link_to "Show", order_path(order) %>
   </p>
 <% end %>
 
