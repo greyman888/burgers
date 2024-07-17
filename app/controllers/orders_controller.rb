@@ -33,7 +33,7 @@ class OrdersController < ApplicationController
   def create
     @order = Order.build(order_params)
     if @order.save
-      # @order.convert_to_JSON
+      @order.convert_to_JSON
     end
     redirect_to orders_path
   end
