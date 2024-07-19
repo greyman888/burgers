@@ -3,27 +3,135 @@ class Order < ApplicationRecord
   has_many :items,          through: :selections
 
   def process_order
-    # Create lists and defaults
-    types = ["Addition", "Burger", "Drink", "Meal", "Side", "Subtraction", "User" ]
+    types = ["Addition", "Burger", "Drink", "Meal", "Side", "Subtraction"]
+    types_with_size = ["Drink", "Meal", "Side"]
+    sizes = ["Small", "Medium", "Large"]
+    threshold = 3
     results = []
-
-    entities = JSON.parse(self.response)
+  
+    entities = JSON.parse(self.response || "{}")
+  
+    # Step 1 is to process match the entities to items
     entities.each do |entity|
-      type_matcher = Amatch::Levenshtein.new(entity["type"])
-      closest_type = types.min_by {|type| type_matcher.match(type)}
+      closest_type = find_closest_match(entity["type"], types, threshold)
+      next unless closest_type
+  
+      if types_with_size.include?(closest_type)
+        if closest_type == "Meal"
+          closest_size = entity["size"] ? (find_closest_match(entity["size"], sizes, threshold) || "Medium") : "Medium"
+        else  
+          closest_size = entity["size"] ? (find_closest_match(entity["size"], sizes, threshold) || "Small") : "Small"
+        end
+      end
+  
+      items = if closest_size
+                Item.where(category: closest_type, size: closest_size).to_a
+              else
+                Item.where(category: closest_type).to_a
+              end
+  
+      item = find_closest_item(entity["name"], items, threshold) 
+      if item.nil?
+        self.update(missing: "#{self.missing}#{entity["name"]}, ")
+      end
+      next unless item
 
-      name_matcher = Amatch::Levenshtein.new(entity["name"])
-      items = Item.where(category: closest_type).to_a
-      closest_item = items.min_by {|item| name_matcher.match(item.name)}
-
-      # Size goes here
-
-      results << [entity["name"], closest_item&.name]
+      results << {id: entity["id"], item_id: item.id, type: item.category, name: item.name, size: item.size, related_to: entity["related_to"]}
     end
-    return results
+  
+    # Step 2 is to create order selections and burger modifications
+
+    # Create a list of meals and burgers
+    meals = []
+    burgers = []
+    results.each do |result|
+      if result[:type] == "Meal"
+        # create selection to use as meal_id
+        selection = Selection.create(order_id: self.id, item_id: result[:item_id])
+        meals << {id: result[:id], selection_id: selection.id, side_count: 0, size: result[:size]}
+      end
+    end
+
+    results.each do |result|
+      if !["Addition", "Subtraction", "Meal"].include?(result[:type]) 
+        # Link Meals
+        meal_id = nil
+        meals.each do |meal|
+          if result[:related_to].include?(meal[:id])
+            meal_id = meal[:selection_id]
+            meal[:side_count] += 1 if result[:type] != "Burger"
+            meal[:side] = true if result[:type] == "Side"
+            meal[:drink] = true if result[:type] == "Drink"
+          end
+        end
+        selection = Selection.create(order_id: self.id, item_id: result[:item_id], meal_id: meal_id)
+        
+        if result[:type] == "Burger"
+          burgers << {id: result[:id], selection_id: selection.id} # assumes burgers come before additions
+        end
+      elsif ["Addition", "Subtraction"].include?(result[:type]) 
+        # Link burger modifications
+        selection_id = nil
+        burgers.each do |burger|
+          if result[:related_to].include?(burger[:id])
+            selection_id = burger[:selection_id]
+          end
+        end
+        Modification.create(selection_id: selection_id, item_id: result[:item_id])
+      end
+    end
+
+    # Step3 - fill in missing Meal defaults (Each meal should have 2 sides)
+    meals.each do |meal|
+      # Validate minimum sizes for sides (a medium meal should at have at least medium sides)
+      sides = Selection.where(meal_id: meal[:selection_id])
+      sides.each do |selection|
+        side = selection.item
+        if side.size > meal[:size] # Sizes work in reverse alphabetical order
+          item = Item.find_by(category: side.category, name: side.name, size: meal[:size])
+          selection.update(item_id: item.id)
+        end
+      end
+
+      # add missing implied items
+      case meal[:side_count]
+      when 0
+        side = Item.find_by(category: "Side", name: "Fries", size: meal[:size])
+        Selection.create(order_id: self.id, item_id: side.id, meal_id: meal[:selection_id])
+        side = Item.find_by(category: "Drink", name: "Cola", size: meal[:size])
+        Selection.create(order_id: self.id, item_id: side.id, meal_id: meal[:selection_id])
+      when 1
+        if meal[:drink]
+          side = Item.find_by(category: "Side", name: "Fries", size: meal[:size])
+          Selection.create(order_id: self.id, item_id: side.id, meal_id: meal[:selection_id])
+        else
+          side = Item.find_by(category: "Drink", name: "Cola", size: meal[:size])
+          Selection.create(order_id: self.id, item_id: side.id, meal_id: meal[:selection_id])
+        end
+      when 2
+        nil
+      else
+        # New code to remove additional items
+      end
+    end
   end
-
-
+  
+  def find_closest_match(target, candidates, threshold)
+    matcher = Amatch::Levenshtein.new(target)
+    closest = candidates.min_by { |candidate| matcher.match(candidate) }
+    return closest if matcher.match(closest) <= threshold
+    nil
+  end
+  
+  def find_closest_item(target_name, items, threshold)
+    cleaned_name = target_name.gsub(/Meal|Drink|Side/i, "").strip # Can add other words with | eg /Meal|Burger/
+    name_matcher = Amatch::Levenshtein.new(cleaned_name)
+    closest = items.min_by { |item| name_matcher.match(item.name) }
+    return closest if name_matcher.match(closest.name) <= threshold
+    puts "VALUE!!: #{name_matcher.match(closest.name)}"
+    nil
+  end
+  
   def convert_to_JSON
     ais_api_key = ENV["AIS_API_KEY"]
     uri = URI.parse("https://api.ai-struct.com/api/v1/submit")
@@ -34,7 +142,7 @@ class Order < ApplicationRecord
     request.body = {
       chunk: {
         text: self.chunk,
-        template: "burger example 1",
+        template: "burger example 2",
         mode: "accuracy"
       }
     }.to_json

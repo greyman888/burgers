@@ -1,30 +1,91 @@
-<h1>New Voice Order</h1>
+<div class="container-fluid">
 
-<div data-controller="voice">
-  <%= form_with(model: @order) do |f| %>
-    <div class="form-floating">
-      <%= f.text_area :chunk, placeholder: "", class: "form-control", style: "height: 200px;", data: {voice_target: "chunk"} %>
-      <%= f.label :chunk, "Order"  %>
+  <h1>Voice Order Menu</h1>
+  <div class="row">
+    <div class="col-sm-2">
+      <h3>Meal Size</h3>
+      <ul>
+        <li>Small</li>
+        <li>Medium</li>
+        <li>Large</li>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <h3>Burgers</h3>
+      <ul>
+        <% @items.each do |item| %>
+          <% if item.category == "Burger" %>
+          <li><%= item.name %> </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <h3>Additions</h3>
+      <ul>
+        <% @items.each do |item| %>
+          <% if item.category == "Addition" %>
+          <li><%= item.name %> </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <h3>Subtractions</h3>
+      <ul>
+        <% @items.each do |item| %>
+          <% if item.category == "Subtraction" %>
+          <li><%= item.name %> </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <h3>Sides</h3>
+      <ul>
+        <% @items.each do |item| %>
+          <% if item.category == "Side" %>
+          <li><%= "#{item.name} (#{item.size})" %> </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <h3>Drinks</h3>
+      <ul>
+        <% @items.each do |item| %>
+          <% if item.category == "Drink" %>
+          <li><%= "#{item.name} (#{item.size})" %> </li>
+          <% end %>
+        <% end %>
+      </ul>
     </div>
 
-  <div>
-    <%= f.submit "Save", class: "btn btn-primary" %>
-  </div>
-  <% end %>
-
-  <div class="mt-3">
-    <button data-action="voice#startCapture" class="btn btn-primary">Start</button>
-    <button data-action="voice#stopCapture" class="btn btn-secondary">Stop</button>
-    <button data-action="voice#convert" class="btn btn-success">Convert</button>
   </div>
 
-  <pre data-voice-target="output">
-    <%= @order.response %>
-  </pre>
+  <div data-controller="voice">
+    <div class="my-3">
+      <button data-action="voice#startCapture" class="btn btn-success">Start</button>
+      <button data-action="voice#stopCapture" class="btn btn-danger">Stop</button>
+      <span class="visually-hidden" data-voice-target="notice">Listening...</span>
+    </div>
+    <%= form_with(model: @order) do |f| %>
+      <div class="form-floating">
+        <%= f.text_area :chunk, placeholder: "", class: "form-control", style: "height: 200px;", data: {voice_target: "chunk"} %>
+        <%= f.label :chunk, "Order"  %>
+      </div>
 
-  <div class="mt-3">
-    <%= @order.process_order %>
+    <div class="mt-3">
+      <%= f.submit "Save", class: "btn btn-primary" %>
+      <%= link_to "Orders", orders_path, class: "btn btn-secondary" %>
+    </div>
+    <% end %>
+
+    <pre data-voice-target="output">
+      <%= @order.response %>
+    </pre>
+
   </div>
+
 </div>
-
 

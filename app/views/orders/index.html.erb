@@ -1,14 +1,17 @@
-<h1>Order List</h1>
-<% @orders.each do |order| %>
-  <p>
-    <%= "#{order.id} (Items: #{order.selections.count})" %>
-    <%= link_to "Edit", edit_order_path(order) %>
-    <%= link_to "Show", order_path(order) %>
-  </p>
-<% end %>
-
-<%= link_to "New Order", new_order_path, class: "btn btn-primary" %>
-<%= link_to "New Voice Order", new_voice_order_path, class: "btn btn-warning" %>
 <div class="mt-3">
   <%= link_to "Items Index", items_path %>
+</div>
+<h1>Order List</h1>
+
+<%= link_to "New Order", new_order_path, data: { "turbo-prefetch": :false }, class: "btn btn-primary" %>
+<%= link_to "New Voice Order", new_voice_order_path, class: "btn btn-warning" %>
+
+<div class="mt-3">
+  <% @orders.each do |order| %>
+    <p>
+      <%= "#{order.id} (Items: #{order.selections.count})" %>
+      <%= link_to "Edit", edit_order_path(order) %>
+      <%= link_to "Show", order_path(order) %>
+    </p>
+  <% end %>
 </div>

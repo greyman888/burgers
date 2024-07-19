@@ -28,17 +28,20 @@ class OrdersController < ApplicationController
   # Voice ordering
   def new_voice
     @order = Order.new
+    @items = Item.all
   end
   
   def create
     @order = Order.build(order_params)
     if @order.save
       @order.convert_to_JSON
+      @order.process_order
     end
-    redirect_to orders_path
+    redirect_to edit_order_path(@order)
   end
   
   def show
+    @items = Item.all
     render "new_voice"
   end
   private

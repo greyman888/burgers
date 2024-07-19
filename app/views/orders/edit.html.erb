@@ -1,5 +1,11 @@
 <h1>Edit Order</h1>
 
+<p><%= @order.chunk %></p>
+
+<% if @order.missing %>
+  <p>Sorry, we don't have <%= @order.missing %> on the menu.</p>
+<% end %>
+
 <p>
   <%= link_to "Add new Item", new_selection_path(order: @order) %>
 </p>
