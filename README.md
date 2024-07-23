@@ -12,5 +12,10 @@ This toy app demonstrates a practical application of Ai Struct to implement the 
 
 This app is currently live at https://tbd.com
 
+Voice to text:
+* The voice to text functionality has only been tested on Chrome so you may need to type in the text for voice orders if your browser doesn't support "webkitSpeechRecognition".
+* The voice to text functionality defaults to the top language preference in your browser settings e.g. en-US
+* Check the browser console when starting speech capture to see what's going on. 
+
 Visit https://ai-struct.com to sign up for ai-struct and get started for free.
 

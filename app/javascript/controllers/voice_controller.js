@@ -8,7 +8,7 @@ export default class extends Controller {
       this.recognition = new webkitSpeechRecognition();
       this.recognition.continuous = true;
       this.recognition.interimResults = false;
-      this.recognition.lang = 'en-AU';
+      this.recognition.lang = navigator.language;
 
       this.recognition.onresult = this.onResult.bind(this);
       this.recognition.onerror = this.onError.bind(this);
@@ -24,6 +24,7 @@ export default class extends Controller {
     if (this.recognition) {
       this.recognition.start();
       console.log('Speech recognition started');
+      console.log(`Your browser language is set to ${navigator.language}`);
       this.noticeTarget.classList.toggle("visually-hidden")
     }
   }
