@@ -12,5 +12,5 @@ This toy app demonstrates a practical application of Ai Struct to implement the 
 
 This app is currently live at https://tbd.com
 
-Visit https://ai-struct.com to sign up for ai-struct today.
+Visit https://ai-struct.com to sign up for ai-struct and get started for free.
 
