@@ -13,7 +13,7 @@ class SelectionsController < ApplicationController
     @selection.save
     if @selection.item.category == "Meal"
       order = @selection.order
-      burger = Item.where(name: @selection.item.name).first
+      burger = Item.where(name: @selection.item.name, category: "Burger").first
       @selection.meal_selections.create(item: burger, order: order)
       size = @selection.item.size
       side = Item.find_by(category: "Side", name: "Fries", size: size)
