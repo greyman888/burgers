@@ -1,50 +1,59 @@
-<h1>Select Item to Add to order</h1>
-<div>
-  <%#link_to "Show this order", @order %> |
-  <%= link_to "Back to order", edit_order_path(@order) %>
-</div>
-
-<%= form_with(model: @selection) do |f| %>
-  <%= f.hidden_field :order_id, value: @order.id %>
-  <h4>Meals</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Meal" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
-    <% end %>
-  <% end %>
-  <h4>Burgers</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Burger" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
-    <% end %>
-  <% end %>
-  <h4>Sides</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Side" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
-    <% end %>
-  <% end %>
-  <h4>Drinks</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Drink" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
-    <% end %>
-  <% end %>
-
-
+<div class="container-fluid">
+  <h1>Select Item to Add to order</h1>
   <div>
-    <%= f.submit "Save", class: "btn btn-primary" %>
+    <%= link_to "Back to orders", edit_order_path(@order) %>
   </div>
-<% end %>
+
+  <%= form_with(model: @selection) do |f| %>
+    <%= f.hidden_field :order_id, value: @order.id %>
+    <div class="row">
+      <div class="col-sm-3">
+        <h4>Meals</h4>
+        <% @items.each do |item| %>
+          <% if item.category == "Meal" %>
+            <div class="form-check">
+              <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+              <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="col-sm-3">
+        <h4>Burgers</h4>
+        <% @items.each do |item| %>
+          <% if item.category == "Burger" %>
+            <div class="form-check">
+              <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+              <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="col-sm-3">
+        <h4>Sides</h4>
+        <% @items.each do |item| %>
+          <% if item.category == "Side" %>
+            <div class="form-check">
+              <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+              <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="col-sm-3">
+        <h4>Drinks</h4>
+        <% @items.each do |item| %>
+          <% if item.category == "Drink" %>
+            <div class="form-check">
+              <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+              <%= f.label "item_#{item.id}", "#{item.name} (#{item.size})", class: "form-check-label", for: "item_#{item.id}" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div>
+      <%= f.submit "Save", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

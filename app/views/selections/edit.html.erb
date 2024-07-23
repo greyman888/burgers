@@ -1,27 +1,29 @@
-<h1><%= @selection.item.name %> Modifications</h1>
+<div class="container-fluid">
+  <h1><%= @selection.item.name %> Modifications</h1>
 
-<%= form_with(model: @modification) do |f| %>
-  <%= f.hidden_field :selection_id, value: @selection.id %>
-  <h4>Additions</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Addition" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
+  <%= form_with(model: @modification) do |f| %>
+    <%= f.hidden_field :selection_id, value: @selection.id %>
+    <h4>Additions</h4>
+    <% @items.each do |item| %>
+      <% if item.category == "Addition" %>
+        <div class="form-check">
+          <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+          <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
-  <h4>Subtractions</h4>
-  <% @items.each do |item| %>
-    <% if item.category == "Subtraction" %>
-      <div class="form-check">
-        <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
-        <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
-      </div>
+    <h4>Subtractions</h4>
+    <% @items.each do |item| %>
+      <% if item.category == "Subtraction" %>
+        <div class="form-check">
+          <%= f.radio_button :item_id, item.id, class: "form-check-input", id: "item_#{item.id}" %>
+          <%= f.label "item_#{item.id}", "#{item.name}", class: "form-check-label", for: "item_#{item.id}" %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
 
-  <div>
-    <%= f.submit "Save", class: "btn btn-primary" %>
-  </div>
-<% end %>
+    <div>
+      <%= f.submit "Save", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

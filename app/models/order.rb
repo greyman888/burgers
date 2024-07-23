@@ -11,11 +11,12 @@ class Order < ApplicationRecord
   
     entities = JSON.parse(self.response || "{}")
   
-    # Step 1 is to process match the entities to items
+    # Step 1 is to match the entities to items
     entities.each do |entity|
       closest_type = find_closest_match(entity["type"], types, threshold)
       next unless closest_type
   
+      # Set default values for size if not provided
       if types_with_size.include?(closest_type)
         if closest_type == "Meal"
           closest_size = entity["size"] ? (find_closest_match(entity["size"], sizes, threshold) || "Medium") : "Medium"
@@ -41,7 +42,7 @@ class Order < ApplicationRecord
   
     # Step 2 is to create order selections and burger modifications
 
-    # Create a list of meals and burgers
+    # Create a list of meals
     meals = []
     burgers = []
     results.each do |result|
@@ -66,6 +67,7 @@ class Order < ApplicationRecord
         end
         selection = Selection.create(order_id: self.id, item_id: result[:item_id], meal_id: meal_id)
         
+        # Create list of Burgers to link additions and subtractions
         if result[:type] == "Burger"
           burgers << {id: result[:id], selection_id: selection.id} # assumes burgers come before additions
         end
@@ -111,7 +113,7 @@ class Order < ApplicationRecord
       when 2
         nil
       else
-        # New code to remove additional items
+        # Code required to remove additional items
       end
     end
   end
@@ -124,11 +126,10 @@ class Order < ApplicationRecord
   end
   
   def find_closest_item(target_name, items, threshold)
-    cleaned_name = target_name.gsub(/Meal|Drink|Side/i, "").strip # Can add other words with | eg /Meal|Burger/
+    cleaned_name = target_name.gsub(/Meal|Drink|Side/i, "").strip
     name_matcher = Amatch::Levenshtein.new(cleaned_name)
     closest = items.min_by { |item| name_matcher.match(item.name) }
     return closest if name_matcher.match(closest.name) <= threshold
-    puts "VALUE!!: #{name_matcher.match(closest.name)}"
     nil
   end
   
@@ -143,7 +144,7 @@ class Order < ApplicationRecord
       chunk: {
         text: self.chunk,
         template: "burger example 2",
-        mode: "accuracy"
+        mode: "balanced"
       }
     }.to_json
 
@@ -153,7 +154,6 @@ class Order < ApplicationRecord
 
     case response
     when Net::HTTPSuccess
-      # puts "Request was successful: #{response.body}"
       self.response = response.body
       self.save
     else

@@ -1,6 +1,4 @@
-<div class="container-fluid">
-
-  <h1>Voice Order Menu</h1>
+<div class="container-fluid" style="margin-top:1rem;">
   <div class="row">
     <div class="col-sm-2">
       <h3>Meal Size</h3>
@@ -60,32 +58,38 @@
         <% end %>
       </ul>
     </div>
-
   </div>
 
   <div data-controller="voice">
-    <div class="my-3">
-      <button data-action="voice#startCapture" class="btn btn-success">Start</button>
-      <button data-action="voice#stopCapture" class="btn btn-danger">Stop</button>
-      <span class="visually-hidden" data-voice-target="notice">Listening...</span>
-    </div>
     <%= form_with(model: @order) do |f| %>
       <div class="form-floating">
-        <%= f.text_area :chunk, placeholder: "", class: "form-control", style: "height: 200px;", data: {voice_target: "chunk"} %>
+        <%= f.text_area :chunk, placeholder: "", class: "form-control", style: "height: 125px;", data: {voice_target: "chunk"} %>
         <%= f.label :chunk, "Order"  %>
       </div>
 
-    <div class="mt-3">
-      <%= f.submit "Save", class: "btn btn-primary" %>
-      <%= link_to "Orders", orders_path, class: "btn btn-secondary" %>
-    </div>
+      <div class="mt-3">
+        <% if !@order.persisted? %>
+          <button type="button" data-action="voice#startCapture" class="btn btn-success">Start</button>
+          <button type="button" data-action="voice#stopCapture" class="btn btn-danger">Stop</button>
+          <%= f.submit "Save", class: "btn btn-primary" %>
+          <span class="visually-hidden" data-voice-target="notice">Listening...</span>
+        <% end %>
+      </div>
     <% end %>
-
-    <pre data-voice-target="output">
-      <%= @order.response %>
-    </pre>
-
   </div>
 
+  <% if @order.persisted? %>
+  <div class="row">
+    <h3>Ai Struct JSON Output</h3>
+    <div style="font-family:monospace;">
+      <%= @order.response %>
+    </div>
+    <div class="mt-3">
+      <h3>Order</h3>
+      <%= render "edit_body" %>
+    </div>
+  </div>
+    
+  <% end %>
 </div>
 

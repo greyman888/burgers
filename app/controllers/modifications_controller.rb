@@ -8,7 +8,7 @@ class ModificationsController < ApplicationController
   end
 
   def destroy
-    order = @modification.order
+    order = @modification.selection.order
     @modification.destroy
     redirect_to edit_order_url(order)
   end

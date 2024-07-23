@@ -2,7 +2,7 @@ class OrdersController < ApplicationController
   before_action :set_order, only: %i[ show edit update destroy ]
 
   def index
-    @orders = Order.all
+    @orders = Order.order(created_at: :desc)
   end
 
   def new
@@ -37,11 +37,12 @@ class OrdersController < ApplicationController
       @order.convert_to_JSON
       @order.process_order
     end
-    redirect_to edit_order_path(@order)
+    redirect_to order_path(@order)
   end
   
   def show
     @items = Item.all
+    @selections = @order.selections.includes(:item, :modifications => :item, :meal_selections => :item)
     render "new_voice"
   end
   private

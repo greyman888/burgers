@@ -1,24 +1,16 @@
-# README
+# Let's order some burgers
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This toy app demonstrates a practical application of Ai Struct to implement the principles of Natural Language Design: 
 
-Things you may want to cover:
+* Only give the user free text input
+* Provide the user cues to guide them
+* Convert the user input into structured entities and relationships (using Ai Struct)
+* Match the user input to the required database entities & fields
+* Create the appropriate relationships between entities
+* Use context specific default values to fill in missing data
+* Give the user the opportunity to correct any misunderstandings or change their mind
 
-* Ruby version
+This app is currently live at https://tbd.com
 
-* System dependencies
+Visit https://ai-struct.com to sign up for ai-struct today.
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
