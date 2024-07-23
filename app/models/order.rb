@@ -126,7 +126,7 @@ class Order < ApplicationRecord
   end
   
   def find_closest_item(target_name, items, threshold)
-    cleaned_name = target_name.gsub(/Meal|Drink|Side/i, "").strip
+    cleaned_name = target_name.gsub(/Meal|Drink|Side|Extra/i, "").strip
     name_matcher = Amatch::Levenshtein.new(cleaned_name)
     closest = items.min_by { |item| name_matcher.match(item.name) }
     return closest if name_matcher.match(closest.name) <= threshold

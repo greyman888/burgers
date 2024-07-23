@@ -10,7 +10,7 @@ This toy app demonstrates a practical application of Ai Struct to implement the 
 * Use context specific default values to fill in missing data
 * Give the user the opportunity to correct any misunderstandings or change their mind
 
-This app is currently live at https://tbd.com
+This app is currently live at https://ai-struct-burgers-e40ed1737714.herokuapp.com
 
 Voice to text:
 * The voice to text functionality has only been tested on Chrome so you may need to type in the text for voice orders if your browser doesn't support "webkitSpeechRecognition".
